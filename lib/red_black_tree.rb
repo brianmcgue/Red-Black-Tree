@@ -10,17 +10,17 @@ class RBNode
     @grandparent ||= @parent.parent unless @parent.nil?
   end
   
-  def left_parent?
-    @grandparent && @grandparent.left == @parent
-  end
-  
-  def left_uncle
-    @grandparent.nil? ? nil : @grandparent.left
-  end
-  
-  def right_uncle
-    @grandparent.nil? ? nil : @grandparent.right
-  end
+  # def left_parent?
+  #   @grandparent && @grandparent.left == @parent
+  # end
+  # 
+  # def left_uncle
+  #   @grandparent.nil? ? nil : @grandparent.left
+  # end
+  # 
+  # def right_uncle
+  #   @grandparent.nil? ? nil : @grandparent.right
+  # end
 end
 
 class RBTree
