@@ -10,17 +10,20 @@ class RBNode
     @grandparent ||= @parent.parent unless @parent.nil?
   end
   
-  # def left_parent?
-  #   @grandparent && @grandparent.left == @parent
-  # end
-  # 
-  # def left_uncle
-  #   @grandparent.nil? ? nil : @grandparent.left
-  # end
-  # 
-  # def right_uncle
-  #   @grandparent.nil? ? nil : @grandparent.right
-  # end
+  def left_parent?
+    grandparent
+    @grandparent && @grandparent.left == @parent
+  end
+  
+  def left_uncle
+    grandparent
+    @grandparent.nil? ? nil : @grandparent.left
+  end
+  
+  def right_uncle
+    grandparent
+    @grandparent.nil? ? nil : @grandparent.right
+  end
 end
 
 class RBTree
@@ -32,11 +35,24 @@ class RBTree
   
   def <<(val)
     node = RBNode.new(val)
-    rb_insert(node)
+    root_case(node)
+  end
+  
+  def insert(node)
+    root_case(node)
   end
   
   def rb_insert(node)
-    
+    tree_insert(node)
+  end
+  
+  def root_case(node)
+    if @root.nil?
+      node.color = :black
+      @root = node
+      return
+    end
+    rb_insert(node)
   end
   
   def rotate_left(node)
@@ -50,15 +66,15 @@ class RBTree
   def tree_insert(node, root = @root)
     if node.value < root.value
       if root.left.nil?
-        node.instance_variable_set(:@left, node)
+        root.left, node.parent = node, root
       else
         tree_insert(node, root.left)
       end
     else
-      if root.left.nil?
-        node.instance_variable_set(:@left, node)
+      if root.right.nil?
+        root.right, node.parent = node, root
       else
-        tree_insert(node, root.left)
+        tree_insert(node, root.right)
       end
     end
   end
