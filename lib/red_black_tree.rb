@@ -44,12 +44,28 @@ class RBTree
   
   def rb_insert(node)
     tree_insert(node)
+    until node == @root || node.parent.color == :black
+      return if node.parent == @root
+      grandparent = node.grandparent
+      if node.left_parent?
+        uncle = node.right_uncle
+        if uncle.nil? || uncle.color == :black
+          
+        else
+          node.parent.color, uncle.color = :black
+          grandparent.color, node = :red, grandparent
+        end
+      else
+        uncle = node.left_uncle
+        
+      end
+      @root.color = :black
+    end
   end
   
   def root_case(node)
     if @root.nil?
-      node.color = :black
-      @root = node
+      node.color, @root = :black, node
       return
     end
     rb_insert(node)

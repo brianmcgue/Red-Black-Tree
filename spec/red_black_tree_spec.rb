@@ -76,5 +76,15 @@ describe RBTree do
       subject.root.should == n1
       subject.root.color.should == :black
     end
+    
+    it "inserts a red child onto a black node" do
+      subject.insert(n1)
+      subject.insert(n7)
+      subject.root.should == n1
+      subject.root.color.should == :black
+      subject.root.right.should == n7
+      subject.root.right.color.should == :red
+    end
+
   end  
 end
