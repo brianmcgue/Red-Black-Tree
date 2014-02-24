@@ -52,13 +52,29 @@ describe RBNode do
 end
 
 describe RBTree do
+  subject { RBTree.new }  
+  let(:n1)  { RBNode.new(1)  }
+  let(:n3)  { RBNode.new(3)  }
+  let(:n4)  { RBNode.new(4)  }
+  let(:n7)  { RBNode.new(7)  }
+  let(:n8)  { RBNode.new(8)  }
+  let(:n9)  { RBNode.new(9)  }
+  let(:n10) { RBNode.new(10) }
+  let(:n11) { RBNode.new(11) }
+  let(:n12) { RBNode.new(12) }
+
+  
   describe "#initialize" do
-    subject { RBTree.new }
-    
     it "sets root to nil" do
       subject.root.should be_nil
     end
   end
   
-  
+  describe "#insert" do
+    it "inserts root and changes color to black" do
+      subject.insert(n1)
+      subject.root.should == n1
+      subject.root.color.should == :black
+    end
+  end  
 end
