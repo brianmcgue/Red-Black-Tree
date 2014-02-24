@@ -39,8 +39,13 @@ describe RBNode do
     end
    
     it "side of parent" do
-      n4.left_parent?.should be_true
-      n6.left_parent?.should be_false      
+      n4.has_left_parent?.should be_true
+      n6.has_left_parent?.should be_false      
+    end
+    
+    it "side of child" do
+      n2.is_left_child?.should be_true
+      n3.is_left_child?.should be_false
     end
     
     it "uncles" do
@@ -86,5 +91,16 @@ describe RBTree do
       subject.root.right.color.should == :red
     end
 
+    it "inserts red child onto inside of red parent nil uncle and adjusts" do
+      subject.insert(n1)
+      subject.insert(n7)
+      subject.insert(n3)
+      subject.root.should == n3
+      subject.root.color.should == :black
+      subject.root.left.value.should == 1
+      subject.root.right.value.should == 7
+      subject.root.left.color.should == :red
+      subject.root.right.color.should == :red
+    end
   end  
 end
