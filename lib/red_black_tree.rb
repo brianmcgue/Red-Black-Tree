@@ -30,9 +30,9 @@ class RBNode
     @grandparent.nil? ? nil : @grandparent.right
   end
   
-  # def to_s
-  #   "#{@left} #{@value} #{@right}"
-  # end
+  def to_s
+    "#{@left} #{@value} #{@right}"
+  end
 end
 
 class RBTree
@@ -80,6 +80,7 @@ class RBTree
         end
       end
       @root.color = :black
+      puts self
     end
   end
   
@@ -123,9 +124,9 @@ class RBTree
     n2.right, n1.parent = n1, n2
   end
   
-  # def to_s
-  #   "#{@root}"
-  # end
+  def to_s
+    "#{@root}"
+  end
   
   def tree_insert(node, root = @root)
     if node.value < root.value
@@ -144,10 +145,10 @@ class RBTree
   end
 end
 
-t = RBTree.new
-t << 10
-t << 5
-t << 15
-t << 7
-t << 8
-puts t
+# t = RBTree.new
+# t << 10
+# t << 5
+# t << 15
+# t << 7
+# t << 8
+# puts t
