@@ -114,5 +114,22 @@ describe RBTree do
       subject.root.left.color.should == :red
       subject.root.right.color.should == :red
     end
+    
+    it "insert red child to red parent on opposite side of red uncle" do
+      subject.insert(n3)
+      subject.insert(n1)
+      subject.insert(n7)
+      subject.root.should == n3
+      subject.root.color.should == :black
+      subject.root.left.should == n1
+      subject.root.right.should == n7
+
+      subject.insert(n8)
+      subject.root.should == n3
+      subject.root.right.color.should == :black
+      subject.root.left.color.should == :black
+      subject.root.right.right.color.should == :red
+      subject.root.right.right.value.should == 8
+    end
   end  
 end
