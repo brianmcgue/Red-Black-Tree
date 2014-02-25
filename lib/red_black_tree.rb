@@ -1,3 +1,5 @@
+require 'debugger'
+
 class RBNode
   attr_accessor :value, :color, :parent, :left, :right
   
@@ -7,7 +9,7 @@ class RBNode
   end
   
   def grandparent
-    @grandparent ||= @parent.parent unless @parent.nil?
+    @parent.nil? ? nil : @parent.parent
   end
   
   def is_left_child?
@@ -15,24 +17,23 @@ class RBNode
     self == @parent.left
   end
   
-  def has_left_parent?
-    grandparent
-    @grandparent && @grandparent.left == @parent
+  def parent_is_left_child?
+    @parent.is_left_child?
   end
   
   def left_uncle
-    grandparent
-    @grandparent.nil? ? nil : @grandparent.left
+    gp = grandparent
+    gp.nil? ? nil : gp.left
   end
   
   def right_uncle
-    grandparent
-    @grandparent.nil? ? nil : @grandparent.right
+    gp = grandparent
+    gp.nil? ? nil : gp.right
   end
   
-  def to_s
-    "#{@left} #{@value} #{@right}"
-  end
+  # def to_s
+  #   "#{@left} #{@value}(#{@color}) #{@right}"
+  # end
 end
 
 class RBTree
@@ -55,32 +56,36 @@ class RBTree
     tree_insert(node)
     until node == @root || node.parent.color == :black
       return if node.parent == @root
-      grandparent = node.grandparent
-      if node.has_left_parent?
+      if node.parent_is_left_child?
         uncle = node.right_uncle
         if uncle.nil? || uncle.color == :black
-          rotate_left(node.parent) unless node.is_left_child?
-          node.parent.color, grandparent.color = :black, :red
-          rotate_right(grandparent)
-          node = grandparent
+          unless node.is_left_child?
+            node = node.parent
+            rotate_left(node)
+          end
+          node.parent.color, node.grandparent.color = :black, :red
+          rotate_right(node.grandparent)
+          node = node.grandparent
         else
-          node.parent.color, uncle.color = :black
-          grandparent.color, node = :red, grandparent
+          node.parent.color, uncle.color = :black, :black
+          node.grandparent.color, node = :red, node.grandparent
         end
       else
         uncle = node.left_uncle
         if uncle.nil? || uncle.color == :black
-          rotate_right(node.parent) if node.is_left_child?
-          node.parent.color, grandparent.color = :black, :red
-          rotate_left(grandparent)
-          node = grandparent
+          if node.is_left_child?
+            node = node.parent
+            rotate_right(node)
+          end
+          node.parent.color, node.grandparent.color = :black, :red
+          rotate_left(node.grandparent)
+          node = node.grandparent
         else
-          node.parent.color, uncle.color = :black
-          grandparent.color, node = :red, grandparent
+          node.parent.color, uncle.color = :black, :black
+          node.grandparent.color, node = :red, node.grandparent
         end
       end
       @root.color = :black
-      puts self
     end
   end
   
@@ -97,7 +102,7 @@ class RBTree
     n1.right = n2.left
     n2.left.parent = n1 unless n2.left.nil?
     if n1 == @root
-      @root == n2
+      @root = n2
     else
       if n1.is_left_child?
         n1.parent.left, n2.parent = n2, n1.parent
@@ -124,9 +129,9 @@ class RBTree
     n2.right, n1.parent = n1, n2
   end
   
-  def to_s
-    "#{@root}"
-  end
+  # def to_s
+  #   "#{@root.value}\n#{@root}"
+  # end
   
   def tree_insert(node, root = @root)
     if node.value < root.value
@@ -144,11 +149,12 @@ class RBTree
     end
   end
 end
-
+# 
 # t = RBTree.new
 # t << 10
-# t << 5
+# t << 85
 # t << 15
-# t << 7
-# t << 8
+# t << 70
+# # t << 8
+# 
 # puts t

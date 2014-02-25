@@ -39,8 +39,8 @@ describe RBNode do
     end
    
     it "side of parent" do
-      n4.has_left_parent?.should be_true
-      n6.has_left_parent?.should be_false      
+      n4.parent_is_left_child?.should be_true
+      n6.parent_is_left_child?.should be_false      
     end
     
     it "side of child" do
