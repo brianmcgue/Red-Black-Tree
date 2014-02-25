@@ -131,5 +131,103 @@ describe RBTree do
       subject.root.right.right.color.should == :red
       subject.root.right.right.value.should == 8
     end
+    
+    it "insert red child to red parent on same side of red uncle" do
+      subject.insert(n3)
+      subject.insert(n1)
+      subject.insert(n7)
+      subject.insert(n4)
+      subject.root.should == n3
+      subject.root.right.color.should == :black
+      subject.root.right.value.should == 7
+      subject.root.right.left.color.should == :red
+      subject.root.right.left.value.should == 4
+      subject.root.left.color.should == :black
+      subject.root.left.value.should == 1
+    end
+
+    it "insert red child to red parent with black uncle and adjusts" do
+      subject.insert(n3)
+      subject.insert(n1)
+      subject.insert(n7)
+      subject.insert(n8)
+      subject.insert(n9)
+
+      subject.root.should == n3
+      subject.root.left.color.should == :black
+      subject.root.left.value.should == 1
+      subject.root.right.should == n8
+      subject.root.right.color.should == :black
+      subject.root.right.left.should == n7
+      subject.root.right.left.color.should == :red
+      subject.root.right.right.should == n9
+      subject.root.right.right.color.should == :red
+    end
+
+    it "insert red child to red parent with red uncle on outside of uncle" do
+      subject.insert(n3)
+      subject.insert(n1)
+      subject.insert(n7)
+      subject.insert(n8)
+      subject.insert(n9)
+      subject.insert(n10)
+
+      subject.root.should == n3
+      subject.root.right.color.should == :red
+      subject.root.right.value.should == 8
+      subject.root.left.color.should == :black
+      subject.root.left.value.should == 1
+      subject.root.right.left.should == n7
+      subject.root.right.right.should == n9
+      subject.root.right.right.right.should == n10
+      subject.root.right.right.right.color.should == :red
+    end
+
+    it "insert a red child at the bottom of a tree and rotates about root" do
+      subject.insert(n3)
+      subject.insert(n1)
+      subject.insert(n7)
+      subject.insert(n8)
+      subject.insert(n9)
+      subject.insert(n10)
+      subject.insert(n11)
+      subject.insert(n12)
+
+      #check left sub tree
+      subject.root.should == n8
+      subject.root.color.should == :black
+      subject.root.left.should == n3
+      subject.root.left.color.should == :red
+      subject.root.left.left.should == n1
+      subject.root.left.right.should == n7
+      subject.root.left.left.color.should == :black
+      subject.root.left.right.color.should == :black
+
+      #check right sub tree
+      subject.root.right.should == n10
+      subject.root.right.color.should == :red
+      subject.root.right.left.should == n9
+      subject.root.right.left.color.should == :black
+      subject.root.right.right.should == n11
+      subject.root.right.right.color.should == :black
+      subject.root.right.right.right.should == n12
+      subject.root.right.right.right.color.should == :red
+    end
+
+    it "spot check for left side of the tree adding" do
+      subject.insert(n12)
+      subject.insert(n11)
+      subject.insert(n10)
+      subject.insert(n9)
+      subject.insert(n8)
+      subject.insert(n7)
+      subject.insert(n3)
+      subject.insert(n1)
+
+      #this is mostly a sanity check
+      subject.root.left.left.left.should == n1
+      subject.root.should == n9
+      subject.root.right.right.should == n12
+    end
   end  
 end
