@@ -149,15 +149,3 @@ class RBTree
     end
   end
 end
-
-t = RBTree.new
-t << 10
-t << 85
-t << 15
-t << 70
-t << 20
-t << 60
-t << 30
-t << 50
-
-puts t
