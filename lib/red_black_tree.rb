@@ -31,9 +31,9 @@ class RBNode
     gp.nil? ? nil : gp.right
   end
   
-  # def to_s
-  #   "#{@left} #{@value}(#{@color}) #{@right}"
-  # end
+  def to_s
+    "#{@left} #{@value}(#{@color}) #{@right}"
+  end
 end
 
 class RBTree
@@ -129,9 +129,9 @@ class RBTree
     n2.right, n1.parent = n1, n2
   end
   
-  # def to_s
-  #   "#{@root.value}\n#{@root}"
-  # end
+  def to_s
+    "Root: #{@root.value}\n#{@root}"
+  end
   
   def tree_insert(node, root = @root)
     if node.value < root.value
@@ -149,12 +149,15 @@ class RBTree
     end
   end
 end
-# 
-# t = RBTree.new
-# t << 10
-# t << 85
-# t << 15
-# t << 70
-# # t << 8
-# 
-# puts t
+
+t = RBTree.new
+t << 10
+t << 85
+t << 15
+t << 70
+t << 20
+t << 60
+t << 30
+t << 50
+
+puts t
