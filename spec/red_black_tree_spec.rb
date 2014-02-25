@@ -102,5 +102,17 @@ describe RBTree do
       subject.root.left.color.should == :red
       subject.root.right.color.should == :red
     end
+    
+    it "insert red child onto outside of red parent nil uncle and adjusts" do
+      subject.insert(n1)
+      subject.insert(n7)
+      subject.insert(n8)
+      subject.root.should == n7
+      subject.root.color.should == :black
+      subject.root.left.value.should == 1
+      subject.root.right.value.should == 8
+      subject.root.left.color.should == :red
+      subject.root.right.color.should == :red
+    end
   end  
 end
