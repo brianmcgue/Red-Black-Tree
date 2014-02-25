@@ -1,5 +1,3 @@
-require 'debugger'
-
 class RBNode
   attr_accessor :value, :color, :parent, :left, :right
   
