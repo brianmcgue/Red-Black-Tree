@@ -6,12 +6,16 @@ class RBNode
     @parent, @left, @right = nil
   end
   
+  def get_child(dir)
+    dir == :left ? @left : @right
+  end
+  
   def grandparent
     @parent.nil? ? nil : @parent.parent
   end
   
   def is_left_child?
-    return nil unless !@parent.nil?
+    return nil if @parent.nil?
     self == @parent.left
   end
   
@@ -29,8 +33,20 @@ class RBNode
     gp.nil? ? nil : gp.right
   end
   
+  def set_child(dir, value)
+    if dir == :left
+      @left = value
+    else
+      @right = value
+    end
+  end
+  
   def to_s
     "#{@left} #{@value}(#{@color}) #{@right}"
+  end
+  
+  def which_child
+    is_left_child? ? :left : :right
   end
 end
 
@@ -46,6 +62,25 @@ class RBTree
     root_case(node)
   end
   
+  def black_uncle(node, uncle)
+    if node.which_child != node.parent.which_child
+      node = node.parent
+      rotate(node, node.which_child)
+    end
+    node.parent.color, node.grandparent.color = :black, :red
+    opp_dir = node.which_child == :left ? :right : :left
+    rotate(node.grandparent, opp_dir)
+    node = node.grandparent
+  end
+  
+  def cases(node, uncle)
+    if uncle.nil? || uncle.color == :black
+      black_uncle(node, uncle)
+    else
+      recolor(node, uncle)
+    end
+  end
+  
   def insert(node)
     root_case(node)
   end
@@ -53,38 +88,16 @@ class RBTree
   def rb_insert(node)
     tree_insert(node)
     until node == @root || node.parent.color == :black
-      return if node.parent == @root
-      if node.parent_is_left_child?
-        uncle = node.right_uncle
-        if uncle.nil? || uncle.color == :black
-          unless node.is_left_child?
-            node = node.parent
-            rotate_left(node)
-          end
-          node.parent.color, node.grandparent.color = :black, :red
-          rotate_right(node.grandparent)
-          node = node.grandparent
-        else
-          node.parent.color, uncle.color = :black, :black
-          node.grandparent.color, node = :red, node.grandparent
-        end
-      else
-        uncle = node.left_uncle
-        if uncle.nil? || uncle.color == :black
-          if node.is_left_child?
-            node = node.parent
-            rotate_right(node)
-          end
-          node.parent.color, node.grandparent.color = :black, :red
-          rotate_left(node.grandparent)
-          node = node.grandparent
-        else
-          node.parent.color, uncle.color = :black, :black
-          node.grandparent.color, node = :red, node.grandparent
-        end
-      end
+      uncle = (node.parent_is_left_child? ? node.right_uncle : node.left_uncle)
+      node = cases(node, uncle)
       @root.color = :black
     end
+  end
+  
+  def recolor(node, uncle)
+    node.parent.color, uncle.color = :black, :black
+    node.grandparent.color, node = :red, node.grandparent    
+    node
   end
   
   def root_case(node)
@@ -95,55 +108,32 @@ class RBTree
     rb_insert(node)
   end
   
-  def rotate_left(n1)
-    n2 = n1.right
-    n1.right = n2.left
-    n2.left.parent = n1 unless n2.left.nil?
-    if n1 == @root
-      @root = n2
+  def rotate(parent, dir1)
+    dir2 = ((dir1 == :left) ? :right : :left)
+    child = parent.get_child(dir2)
+    parent.set_child(dir2, child.get_child(dir1))
+    child.get_child(dir1).parent = parent unless child.get_child(dir1).nil?
+    if parent == @root
+      @root = child
     else
-      if n1.is_left_child?
-        n1.parent.left, n2.parent = n2, n1.parent
-      else
-        n1.parent.right, n2.parent = n2, n1.parent
-      end
+      child.parent = parent.parent
+      parent.parent.set_child(parent.which_child, child) 
     end
-    n2.left, n1.parent = n1, n2
-  end
-    
-  def rotate_right(n1)
-    n2 = n1.left
-    n1.left = n2.right
-    n2.right.parent = n1 unless n2.right.nil?
-    if n1 == @root
-      @root = n2
-    else
-      if n1.is_left_child?
-        n1.parent.left, n2.parent = n2, n1.parent
-      else
-        n1.parent.right, n2.parent = n2, n1.parent
-      end
-    end
-    n2.right, n1.parent = n1, n2
+    parent.parent = child
+    child.set_child(dir1, parent)
   end
   
   def to_s
     "Root: #{@root.value}\n#{@root}"
   end
   
-  def tree_insert(node, root = @root)
-    if node.value < root.value
-      if root.left.nil?
-        root.left, node.parent = node, root
-      else
-        tree_insert(node, root.left)
-      end
+  def tree_insert(node, root = @root)    
+    dir = node.value < root.value ? :left : :right
+    if root.get_child(dir).nil?
+      root.set_child(dir, node)
+      node.parent = root
     else
-      if root.right.nil?
-        root.right, node.parent = node, root
-      else
-        tree_insert(node, root.right)
-      end
+      tree_insert(node, root.get_child(dir))
     end
   end
 end
