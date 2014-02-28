@@ -70,7 +70,7 @@ class RBTree
     node.parent.color, node.grandparent.color = :black, :red
     opp_dir = node.which_child == :left ? :right : :left
     rotate(node.grandparent, opp_dir)
-    node = node.grandparent
+    node.grandparent
   end
   
   def cases(node, uncle)
