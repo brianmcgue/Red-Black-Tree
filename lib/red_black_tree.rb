@@ -33,12 +33,14 @@ class RBNode
     gp.nil? ? nil : gp.right
   end
   
-  def set_child(dir, value)
+  def set_child(dir, child)
     if dir == :left
-      @left = value
+      @left = child
     else
-      @right = value
+      @right = child
     end
+    # This will make code more DRY, but still need to implement refactoring
+    # child.parent = self unless child.nil?
   end
   
   def to_s
