@@ -10,17 +10,15 @@
 	</style>
 </head>
 <body>
-	<form>
+	<form id="node">
 		<input type="text" name="input" id="new_node"></input>
 		<input type="submit" value="Add node"></input>
 	</form>
-	<div id="container"></div>
+	<canvas width=500 height=500 id="container"></canvas>
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="rb_node.js"></script>
 	<script src="rb_tree.js"></script>
 	<script src="rb_view.js"></script>
-	<script src="release-v1.0.1/sigma.min.js"></script>
-	<script src="release-v1.0.1/plugins/sigma.parsers.json.min.js"></script>
 	<script>
 		var view = new RB.View();
 	</script>
