@@ -21,15 +21,17 @@
 
     newNode: function (val) {
       // Won't run if val is NaN
-      if (val === val) {
+      if (val === val && val < 100 && val > -100) {
         var uiNode = new RB.UINode(val);
         this.tree.insertVal({
           value: val,
           uiNode: uiNode
         });
+        $("#new_node").val("");
+        this.render();
+      } else {
+        alert("Please only enter numerical values between and including -99 and 99.");
       }
-      $("#new_node").val("");
-      this.render();
     },
     
     render: function () {
