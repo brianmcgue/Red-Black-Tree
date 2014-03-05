@@ -20,6 +20,7 @@
     },
 
     newNode: function (val) {
+      $("#new_node").val("");
       // Won't run if val is NaN
       if (val === val && val < 100 && val > -100) {
         var uiNode = new RB.UINode(val);
@@ -27,7 +28,6 @@
           value: val,
           uiNode: uiNode
         });
-        $("#new_node").val("");
         this.render();
       } else {
         alert("Please only enter numerical values between and including -99 and 99.");
